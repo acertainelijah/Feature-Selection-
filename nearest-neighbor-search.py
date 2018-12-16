@@ -1,5 +1,6 @@
 import math
 import copy
+import time
 
 #TODO
 #how do I initially choose the class 1 and 2?
@@ -20,8 +21,8 @@ def nearest_neighbor(features_arr):
     num_feature_rows = len(features_arr[0])
     num_feature_cols = len(features_arr)
 
-    print "num_feature_rows = " + str(num_feature_rows)
-    print "num_feature_cols = " + str(num_feature_cols)
+    #print "num_feature_rows = " + str(num_feature_rows)
+    #print "num_feature_cols = " + str(num_feature_cols)
 
     for k in range(num_feature_rows):  # first loop
         min_distance = pow(10, 100)
@@ -39,9 +40,9 @@ def nearest_neighbor(features_arr):
 
         if features_arr[0][k] == features_arr[0][min_index]:
             num_correct += 1
-            print "Num Correct: " + str(num_correct)
-        else:
-            print "Wrong class!!!"
+            #print "Num Correct: " + str(num_correct)
+        #else:
+            #print "Wrong class!!!"
 
     return float(num_correct)/num_feature_rows * 100
 
@@ -57,30 +58,46 @@ def forward_selection(datatable_name):
     print "fw --- num_feature_rows = " + str(num_feature_rows)
     print "fw --- num_feature_cols = " + str(num_feature_cols)
 
-    curr_BEST_features_node = []  # node that you are checking
+    level_BEST_features_node = []  # node that you are checking
+    level_BEST_accuracy = 0
     set_of_BEST_features_nodes = []  # current set of best nodes, greedy path
     BEST_accuracy = 0
 
     for i in range(num_feature_cols):
-        for j in range(num_feature_cols):
-            temp_curr_features_node = list(set_of_BEST_features_nodes)
-            if j != 0 and not j in temp_curr_features_node:
-                temp_curr_features_node.append(j)
+        if (i != 0):
+            initial_node = level_BEST_features_node
 
-                print "temp_curr_features_node = " + str(temp_curr_features_node)
-                result_arr = get_features_array(data, temp_curr_features_node)
-                accuracy = nearest_neighbor(result_arr)
+            level_BEST_features_node = []  # node that you are checking
+            level_BEST_accuracy = 0
+            for j in range(num_feature_cols):
+                #temp_curr_features_node = list(set_of_BEST_features_nodes)
+                temp_curr_features_node = list(initial_node)
+                if j != 0 and not j in temp_curr_features_node:
+                    temp_curr_features_node.append(j)
 
-                curly_braces = print_node_array(temp_curr_features_node)
-                print "Using feature(s) " + curly_braces + " accuracy is " + str(accuracy) + "%"
+                    #print "temp_curr_features_node = " + str(temp_curr_features_node) + " - j val: " + str(j) \
+                    #      + " - i val: " + str(i)
+                    result_arr = get_features_array(data, temp_curr_features_node)
+                    accuracy = nearest_neighbor(result_arr)
 
-                if(accuracy > BEST_accuracy): # if the accuracy of the current node is better than BEST in level
-                    set_of_BEST_features_nodes = temp_curr_features_node  # update best features array
-                    BEST_accuracy = accuracy  # updated the new accuracy
+                    curly_braces = print_node_array(temp_curr_features_node)
+                    #print "Using feature(s) " + curly_braces + " accuracy is " + str(accuracy) + "%"
 
-        curly_braces_loop = print_node_array(set_of_BEST_features_nodes)
-        print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(BEST_accuracy) + "%"
+                    if(accuracy > level_BEST_accuracy): # if the accuracy of the current node is better than BEST in level
+                        level_BEST_features_node = temp_curr_features_node  # update best features array
+                        level_BEST_accuracy = accuracy  # updated the new accuracy
 
+            curly_braces_loop = print_node_array(level_BEST_features_node)
+            # display curr level best
+            print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(level_BEST_accuracy) + "%"
+            print "On the " + str(i) + "th level of the search tree"
+            if (level_BEST_accuracy > BEST_accuracy):
+                set_of_BEST_features_nodes = level_BEST_features_node
+                print "Updated total features node! Old accuracy = " + str(BEST_accuracy) + " New accuracy = " \
+                      + str(level_BEST_accuracy)
+                BEST_accuracy = level_BEST_accuracy
+
+    # display total best
     curly_braces_final = print_node_array(set_of_BEST_features_nodes)
     print "Finished search!! The best feature subset is " + curly_braces_final + ", which has an accuracy of " \
           + str(BEST_accuracy) + "%"
@@ -102,25 +119,19 @@ def print_node_array(node_array):
 
 
 #main:
-print "Beginning search."
-forward_selection("CS170_SMALLtestdata__108.txt")
+start_time = time.time()
 
-# search the sample test data set and return feature 1 and 2
+print "Beginning search."
+#forward_selection("CS170_SMALLtestdata__108.txt")
+#forward_selection("CS170_SMALLtestdata__109.txt")
+#forward_selection("CS170_SMALLtestdata__110.txt")
+forward_selection("CS170_LARGEtestdata__108.txt")
+#forward_selection("CS170_LARGEtestdata__109.txt")
+#forward_selection("CS170_LARGEtestdata__110.txt")
+
+print "--- %s seconds ---" % (time.time() - start_time)
+
 # TODO create a class that iterates through 1 to 10 features and then 1 to 100 features
 
-# result_arr = get_features_array("CS170_SMALLtestdata__108.txt", [6, 5, 4])
-# result_arr = get_features_array("CS170_SMALLtestdata__109.txt", [7, 9, 2])
-# result_arr = get_features_array("CS170_SMALLtestdata__110.txt", [6, 4, 9])
 
-# result_arr = get_features_array("CS170_LARGEtestdata__108.txt", [46, 26, 95])
-# result_arr = get_features_array("CS170_LARGEtestdata__109.txt", [72, 19, 2])
-#result_arr = get_features_array("CS170_LARGEtestdata__110.txt", [1, 66, 6])
-
-# result_arr = get_features_array("CS170_SMALLtestdata__SAMPLE.txt", [1, 3])
-
-#print result_arr
-#print global_data
-
-#accuracy = nearest_neighbor(result_arr)
-#print "Accuracy is: " + str(accuracy) + "%"
 

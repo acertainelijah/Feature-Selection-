@@ -20,49 +20,49 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="1" />
+          <entry key="py" value="3" />
           <entry key="txt" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="8" />
-          <entry key="Python" value="1" />
+          <entry key="Python" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="3208" />
+          <entry key="py" value="3840" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="3208" />
+          <entry key="Python" value="3840" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/nearest-neighbor-search.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="846">
-              <caret line="93" column="16" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="16" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-                <marker date="1544918590139" expanded="true" signature="209:210" ph="..." />
-                <marker date="1544918590139" expanded="true" signature="3434:3733" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CS170_SMALLtestdata__SAMPLE.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <caret column="33" selection-start-column="33" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/nearest-neighbor-search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="781">
+              <caret line="91" column="92" selection-start-line="91" selection-start-column="92" selection-end-line="91" selection-end-column="92" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+                <marker date="1544922437567" expanded="true" signature="221:222" ph="..." />
+                <marker date="1544922437567" expanded="true" signature="4416:4708" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -194,12 +194,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nearest-neighbor-search.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="846">
-          <caret line="93" column="16" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="16" />
+        <state relative-caret-position="781">
+          <caret line="91" column="92" selection-start-line="91" selection-start-column="92" selection-end-line="91" selection-end-column="92" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <marker date="1544918590139" expanded="true" signature="209:210" ph="..." />
-            <marker date="1544918590139" expanded="true" signature="3434:3733" ph="..." />
+            <marker date="1544922437567" expanded="true" signature="221:222" ph="..." />
+            <marker date="1544922437567" expanded="true" signature="4416:4708" ph="..." />
           </folding>
         </state>
       </provider>
