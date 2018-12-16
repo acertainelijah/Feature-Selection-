@@ -56,7 +56,7 @@ def forward_selection(datatable_name):
 
     print "This dataset has "+ str(num_feature_cols - 1) + " features(not including the class attribute), with " + str(num_feature_rows) + " instances."
     #running nearest neighbor on all
-    all_accuracy = nearest_neighbor(get_features_array(data, list(range(1,num_feature_cols - 1))))
+    all_accuracy = nearest_neighbor(get_features_array(data, list(range(1, num_feature_cols - 1))))
     print "Running nearest neighbor with all " +str(num_feature_cols - 1) + " features, using \"leaving-one-out\" evaluation, I get an accuracy of " + str(all_accuracy) + "%"
     level_BEST_features_node = []  # node that you are checking
     level_BEST_accuracy = 0
@@ -77,13 +77,8 @@ def forward_selection(datatable_name):
                 if j != 0 and not j in temp_curr_features_node:
                     temp_curr_features_node.append(j)
 
-                    #print "temp_curr_features_node = " + str(temp_curr_features_node) + " - j val: " + str(j) \
-                    #      + " - i val: " + str(i)
                     result_arr = get_features_array(data, temp_curr_features_node)
                     accuracy = nearest_neighbor(result_arr)
-
-                    curly_braces = print_node_array(temp_curr_features_node)
-                    #print "Using feature(s) " + curly_braces + " accuracy is " + str(accuracy) + "%"
 
                     if(accuracy > level_BEST_accuracy): # if the accuracy of the current node is better than BEST in level
                         level_BEST_features_node = temp_curr_features_node  # update best features array
@@ -107,6 +102,64 @@ def forward_selection(datatable_name):
     print "Finished search!! The best feature subset is " + curly_braces_final + ", which has an accuracy of " \
           + str(BEST_accuracy) + "%"
 
+def backward_elimination(datatable_name):
+    f = open(datatable_name, "r")
+    f = [x.strip() for x in f if x.strip()]
+    data = [tuple(map(float, x.split())) for x in f[0:]]
+    num_feature_rows = len(data)  # Dataset Instances
+    num_feature_cols = len(data[0])  # Dataset Features
+
+    print "This dataset has "+ str(num_feature_cols - 1) + " features(not including the class attribute), with " + str(num_feature_rows) + " instances."
+    #running nearest neighbor on all
+    all_accuracy = nearest_neighbor(get_features_array(data, list(range(1, num_feature_cols - 1))))
+    print "Running nearest neighbor with all " +str(num_feature_cols - 1) + " features, using \"leaving-one-out\" evaluation, I get an accuracy of " + str(all_accuracy) + "%"
+    level_BEST_features_node = list(range(1, num_feature_cols))  # node that you are checking
+    print " level_BEST_features_node = " +  str(level_BEST_features_node)
+    level_BEST_accuracy = 0
+    set_of_BEST_features_nodes = list(range(1, num_feature_cols - 1))  # current set of best nodes, greedy path
+    BEST_accuracy = 0
+
+
+    print "Beginning search."
+    for i in reversed(range(num_feature_cols)):
+        print "i: " + str(i)
+        if (i != 0):
+            initial_node = level_BEST_features_node
+
+            level_BEST_features_node = []  # node that you are checking
+            level_BEST_accuracy = 0
+            for j in reversed(range(num_feature_cols)):
+                temp_curr_features_node = list(initial_node)
+                #if j != 0 and j in temp_curr_features_node:
+                if j in temp_curr_features_node:
+                    #if j != num_feature_cols:
+                    temp_curr_features_node.remove(j)
+
+                    result_arr = get_features_array(data, temp_curr_features_node)
+                    accuracy = nearest_neighbor(result_arr)
+
+                    if(accuracy > level_BEST_accuracy): # if the accuracy of the current node is better than BEST in level
+                        level_BEST_features_node = temp_curr_features_node  # update best features array
+                        level_BEST_accuracy = accuracy  # updated the new accuracy
+
+
+            # display curr level best
+            if (level_BEST_accuracy > BEST_accuracy):
+                set_of_BEST_features_nodes = level_BEST_features_node
+                print "Updated total features node! Old accuracy = " + str(BEST_accuracy) + " New accuracy = " \
+                      + str(level_BEST_accuracy)
+                BEST_accuracy = level_BEST_accuracy
+            else:
+                print "(Warning, Accuracy has decreased! Continuing search in case of local maxima)"
+
+            curly_braces_loop = print_node_array(level_BEST_features_node)
+            print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(level_BEST_accuracy) + "%"
+            print "On the " + str(i) + "th level of the search tree"
+
+    # display total best
+    curly_braces_final = print_node_array(set_of_BEST_features_nodes)
+    print "Finished search!! The best feature subset is " + curly_braces_final + ", which has an accuracy of " \
+          + str(BEST_accuracy) + "%"
 
 def print_node_array(node_array):
     node_array_string = "{"
@@ -128,6 +181,7 @@ def run_algorithm(filename, algorithm_num):
         forward_selection(filename)
     if (algorithm_num == 2):
         print "\nRunning Backwards Selection."
+        backward_elimination(filename)
     if (algorithm_num == 3):
         print"\nRunning Elijah\'s Special Algorithm."
 
@@ -147,6 +201,7 @@ run_algorithm(filename, algorithm_num)
 #forward_selection("CS170_LARGEtestdata__108.txt")
 #forward_selection("CS170_LARGEtestdata__109.txt")
 #forward_selection("CS170_LARGEtestdata__110.txt")
+#CS170_SMALLtestdata__SAMPLE.txt
 
 print "--- %s seconds ---" % (time.time() - start_time)
 
