@@ -57,25 +57,33 @@ def forward_selection(datatable_name):
     print "fw --- num_feature_rows = " + str(num_feature_rows)
     print "fw --- num_feature_cols = " + str(num_feature_cols)
 
-    curr_BEST_features_node = []
-    set_of_BEST_features_nodes = []
-    temp_num = 1
+    curr_BEST_features_node = []  # node that you are checking
+    set_of_BEST_features_nodes = []  # current set of best nodes, greedy path
+    BEST_accuracy = 0
+
     for i in range(num_feature_cols):
         for j in range(num_feature_cols):
-            temp_curr_features_node = []
             temp_curr_features_node = list(set_of_BEST_features_nodes)
-            temp_curr_features_node.append(j)
-            print "temp_curr_features_node = "
-            print temp_curr_features_node
-            #result_arr = get_features_array(data, temp_curr_features_node)
-            accuracy = 420
-            #accuracy = nearest_neighbor(result_arr)
-            curly_braces = print_node_array(temp_curr_features_node)
-            print "Using feature(s) " + curly_braces + " accuracy is " + str(accuracy) + "%"
-            #print "Accuracy is: " + str(accuracy) + "%"
-            if(j == temp_num and j != 0):
-                set_of_BEST_features_nodes.append(j)
-                temp_num = temp_num + 1
+            if j != 0 and not j in temp_curr_features_node:
+                temp_curr_features_node.append(j)
+
+                print "temp_curr_features_node = " + str(temp_curr_features_node)
+                result_arr = get_features_array(data, temp_curr_features_node)
+                accuracy = nearest_neighbor(result_arr)
+
+                curly_braces = print_node_array(temp_curr_features_node)
+                print "Using feature(s) " + curly_braces + " accuracy is " + str(accuracy) + "%"
+
+                if(accuracy > BEST_accuracy): # if the accuracy of the current node is better than BEST in level
+                    set_of_BEST_features_nodes = temp_curr_features_node  # update best features array
+                    BEST_accuracy = accuracy  # updated the new accuracy
+
+        curly_braces_loop = print_node_array(set_of_BEST_features_nodes)
+        print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(BEST_accuracy) + "%"
+
+    curly_braces_final = print_node_array(set_of_BEST_features_nodes)
+    print "Finished search!! The best feature subset is " + curly_braces_final + ", which has an accuracy of " \
+          + str(BEST_accuracy) + "%"
 
 
 def print_node_array(node_array):
@@ -84,7 +92,7 @@ def print_node_array(node_array):
 
     for i in range(node_array_size):
         node_array_string += str(node_array[i])
-        if i != range(node_array_size - 1):
+        if i != (node_array_size - 1):
             node_array_string += ","
 
     node_array_string += "}"
@@ -94,6 +102,7 @@ def print_node_array(node_array):
 
 
 #main:
+print "Beginning search."
 forward_selection("CS170_SMALLtestdata__108.txt")
 
 # search the sample test data set and return feature 1 and 2
