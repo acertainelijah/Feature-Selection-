@@ -51,18 +51,20 @@ def forward_selection(datatable_name):
     f = open(datatable_name, "r")
     f = [x.strip() for x in f if x.strip()]
     data = [tuple(map(float, x.split())) for x in f[0:]]
+    num_feature_rows = len(data)  # Dataset Instances
+    num_feature_cols = len(data[0])  # Dataset Features
 
-    num_feature_rows = len(data)
-    num_feature_cols = len(data[0])
-
-    print "fw --- num_feature_rows = " + str(num_feature_rows)
-    print "fw --- num_feature_cols = " + str(num_feature_cols)
-
+    print "This dataset has "+ str(num_feature_cols - 1) + " features(not including the class attribute), with " + str(num_feature_rows) + " instances."
+    #running nearest neighbor on all
+    all_accuracy = nearest_neighbor(get_features_array(data, list(range(1,num_feature_cols - 1))))
+    print "Running nearest neighbor with all " +str(num_feature_cols - 1) + " features, using \"leaving-one-out\" evaluation, I get an accuracy of " + str(all_accuracy) + "%"
     level_BEST_features_node = []  # node that you are checking
     level_BEST_accuracy = 0
     set_of_BEST_features_nodes = []  # current set of best nodes, greedy path
     BEST_accuracy = 0
 
+
+    print "Beginning search."
     for i in range(num_feature_cols):
         if (i != 0):
             initial_node = level_BEST_features_node
@@ -87,15 +89,18 @@ def forward_selection(datatable_name):
                         level_BEST_features_node = temp_curr_features_node  # update best features array
                         level_BEST_accuracy = accuracy  # updated the new accuracy
 
-            curly_braces_loop = print_node_array(level_BEST_features_node)
             # display curr level best
-            print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(level_BEST_accuracy) + "%"
-            print "On the " + str(i) + "th level of the search tree"
             if (level_BEST_accuracy > BEST_accuracy):
                 set_of_BEST_features_nodes = level_BEST_features_node
                 print "Updated total features node! Old accuracy = " + str(BEST_accuracy) + " New accuracy = " \
                       + str(level_BEST_accuracy)
                 BEST_accuracy = level_BEST_accuracy
+            else:
+                print "(Warning, Accuracy has decreased! Continuing search in case of local maxima)"
+
+            curly_braces_loop = print_node_array(level_BEST_features_node)
+            print "Feature set " + curly_braces_loop + " was best, accuracy is " + str(level_BEST_accuracy) + "%"
+            print "On the " + str(i) + "th level of the search tree"
 
     # display total best
     curly_braces_final = print_node_array(set_of_BEST_features_nodes)
@@ -116,16 +121,30 @@ def print_node_array(node_array):
 
     return node_array_string
 
+def run_algorithm(filename, algorithm_num):
 
+    if(algorithm_num == 1):
+        print "\nRunning Forward Selection."
+        forward_selection(filename)
+    if (algorithm_num == 2):
+        print "\nRunning Backwards Selection."
+    if (algorithm_num == 3):
+        print"\nRunning Elijah\'s Special Algorithm."
 
 #main:
 start_time = time.time()
 
-print "Beginning search."
+print "Welcome to Elijah Marchese Feature Selection Algorithm."
+filename = raw_input("Type in the name of the file to test : ")
+algorithm_num = input("Type the number of the algorithm you want to run.\n"
+                          "1)	Forward Selection\n"
+                          "2)	Backward Elimination\n"
+                          "3)	Elijah\'s Special Algorithm.\n")
+run_algorithm(filename, algorithm_num)
 #forward_selection("CS170_SMALLtestdata__108.txt")
 #forward_selection("CS170_SMALLtestdata__109.txt")
 #forward_selection("CS170_SMALLtestdata__110.txt")
-forward_selection("CS170_LARGEtestdata__108.txt")
+#forward_selection("CS170_LARGEtestdata__108.txt")
 #forward_selection("CS170_LARGEtestdata__109.txt")
 #forward_selection("CS170_LARGEtestdata__110.txt")
 
